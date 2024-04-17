@@ -24,16 +24,16 @@ WebDriverWait(driver, 20).until(
 time.sleep(5)
 
 tracking_lists = [
-    "限量推薦",
-    "義式致敬經典系列",
-    "咖啡大師特調系列",
-    "環遊世界咖啡系列",
-    "單一產區咖啡系列",
-    "濃縮咖啡系列",
+    "限量推薦",  # Limited Edition and Seasonal
+    "義式致敬經典系列",  # Ispirazione Italiana
+    "咖啡大師特調系列",  # Barista Creations
+    "環遊世界咖啡系列",  # Master Origins
+    "單一產區咖啡系列",  # World Explorations
+    "濃縮咖啡系列",  # The Original Collection
 ]
 
 
-# get link for each item in the limited offer
+# get link for each item in tracking list
 for lst in tracking_lists:
     item_count = limited_counts = len(
         driver.find_elements(By.XPATH, "//nb-sku-coffee[@tracking_list='" + lst + "']")
