@@ -5,12 +5,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from urllib.parse import urlparse
+from collections import defaultdict
+import re
 
 # open chrome
 service = Service(executable_path="chromedriver.exe")
 options = webdriver.ChromeOptions()
 
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
+options.add_argument("--disable-blink-features=AutomationControlled")
 driver = webdriver.Chrome(service=service, options=options)
 
 # nespresso home page
@@ -32,7 +35,7 @@ tracking_lists = [
     "濃縮咖啡系列",  # The Original Collection
 ]
 
-
+coffee_dict = defaultdict(list)  # coffee pod: [url, caffeine_amount]
 # get link for each item in tracking list
 for lst in tracking_lists:
     item_count = limited_counts = len(
@@ -50,7 +53,44 @@ for lst in tracking_lists:
         )
         url = limited_item.get_attribute("href")
         coffee_pod = urlparse(url).path.split("/")[-1]
+        # avoid adding package to the dictionary
+        if "pack" not in coffee_pod:
+            coffee_dict[coffee_pod].append(url)
         tracking_position += 1
+
+print("Finish scripting coffee name and url")
+
+try:
+    for coffee in coffee_dict:
+        driver.get(coffee_dict[coffee][0])
+
+        WebDriverWait(driver, 20).until(
+            EC.element_to_be_clickable((By.XPATH, "//*[@id='collapse-heading-0']"))
+        ).click()
+
+        time.sleep(5)
+
+        ingredient = driver.find_element(
+            By.XPATH, "//*[@id='collapse-region-0']/div/p[3]"
+        )
+
+        # extract the caffeine amount
+        caffeine_amount = ingredient.text.splitlines()[2]
+        caffeine_amount = caffeine_amount.replace(" ", "")
+        caffeine_amount = re.findall(r"\d+毫克/\d+毫升", caffeine_amount)[0]
+
+        # translate the caffeine amount
+        caffeine_amount_translated = caffeine_amount.replace("毫克", "mg")
+        caffeine_amount_translated = caffeine_amount_translated.replace("毫升", "ml")
+
+        # add caffeine amount to corresponding coffee pod
+        coffee_dict[coffee].append(caffeine_amount_translated)
+        print(coffee_dict)
+        time.sleep(5)
+
+
+except ConnectionRefusedError:
+    print("Machine refused to connect")
 
 
 driver.quit()
