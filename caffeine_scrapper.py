@@ -30,11 +30,11 @@ time.sleep(5)
 
 tracking_lists = [
     "限量推薦",  # Limited Edition and Seasonal
-    "義式致敬經典系列",  # Ispirazione Italiana
-    "咖啡大師特調系列",  # Barista Creations
-    "環遊世界咖啡系列",  # Master Origins
-    "單一產區咖啡系列",  # World Explorations
-    "濃縮咖啡系列",  # The Original Collection
+    # "義式致敬經典系列",  # Ispirazione Italiana
+    # "咖啡大師特調系列",  # Barista Creations
+    # "環遊世界咖啡系列",  # Master Origins
+    # "單一產區咖啡系列",  # World Explorations
+    # "濃縮咖啡系列",  # The Original Collection
 ]
 
 coffee_dict = defaultdict(list)  # coffee pod: [coffee_pod, url, caffeine_amount]
@@ -97,7 +97,9 @@ try:
                 "rich_text": [{"text": {"content": coffee_dict[coffee][2]}}]
             },
         }
-        create_page(data)
+        print(existed(coffee))
+        if not existed(coffee):
+            create_page(data)
 
 except ConnectionRefusedError:
     print("Machine refused to connect")
