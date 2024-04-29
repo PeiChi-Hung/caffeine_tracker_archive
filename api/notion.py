@@ -14,17 +14,20 @@ headers = {
 }
 
 
+# create a new page in notion data
 def create_page(data: dict):
     create_url = "https://api.notion.com/v1/pages"
-
     payload = {"parent": {"database_id": DATABASE_ID}, "properties": data}
-
     res = requests.post(create_url, headers=headers, json=payload)
-    print(res.status_code)
     return res
 
 
-# dummy data
-# coffee_name = "dharkan-coffee-pods"
-# url = "https://www.nespresso.com/tw/zh/order/capsules/original/dharkan-coffee-pods"
-# caffeine_amount = "75mg/25ml"
+# check if page for a coffee pod exists
+def existed(data):
+    readUrl = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
+    payload = {
+        "filter": {"property": "Coffee Name", "title": {"contains": data}},
+    }
+    response = requests.request("POST", readUrl, json=payload, headers=headers)
+    result = response.json()["results"]
+    return len(result) == 1
