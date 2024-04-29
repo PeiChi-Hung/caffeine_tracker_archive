@@ -97,7 +97,6 @@ try:
                 "rich_text": [{"text": {"content": coffee_dict[coffee][2]}}]
             },
         }
-        print(existed(coffee))
         if not existed(coffee):
             create_page(data)
 
