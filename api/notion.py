@@ -23,11 +23,26 @@ def create_page(data: dict):
 
 
 # check if page for a coffee pod exists
-def existed(data):
+def get_page(data):
     readUrl = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
     payload = {
-        "filter": {"property": "Coffee Name", "title": {"contains": data}},
+        "filter": {"property": "Coffee Name", "title": {"equals": data}},
     }
     response = requests.request("POST", readUrl, json=payload, headers=headers)
-    result = response.json()["results"]
-    return len(result) == 1
+    if len(response.json()["results"]) >= 1:
+        page_detail = response.json()["results"][0]["id"]
+        return page_detail
+    return "Not Found"
+
+
+def add_price(id, capsule_price):
+    readUrl = f"https://api.notion.com/v1/pages/{id}"
+    payload = {"properties": {"Capsule Price": {"number": capsule_price}}}
+    res = requests.request("PATCH", readUrl, json=payload, headers=headers)
+    print(res.json())
+    return res
+
+
+page_detail = get_page("dharkan-coffee-pods")
+# block_id = page_detail["properties"]["Capsule Price"]["id"]
+print(add_price(page_detail, 1.10))
