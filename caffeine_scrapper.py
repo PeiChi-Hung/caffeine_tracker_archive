@@ -29,17 +29,17 @@ WebDriverWait(driver, 30).until(
 time.sleep(5)
 
 tracking_lists = [
-    "限量推薦",  # Limited Edition and Seasonal
+    # "限量推薦",  # Limited Edition and Seasonal
     # "義式致敬經典系列",  # Ispirazione Italiana
     # "咖啡大師特調系列",  # Barista Creations
     # "環遊世界咖啡系列",  # Master Origins
-    # "單一產區咖啡系列",  # World Explorations
-    # "濃縮咖啡系列",  # The Original Collection
+    "單一產區咖啡系列",  # World Explorations
+    "濃縮咖啡系列",  # The Original Collection
 ]
 
 coffee_dict = defaultdict(list)  # coffee pod: [coffee_pod, url, caffeine_amount]
-# get link for each item in tracking list
 
+# get link for each item in tracking list
 for lst in tracking_lists:
     item_count = len(
         driver.find_elements(By.XPATH, "//nb-sku-coffee[@tracking_list='" + lst + "']")
@@ -88,7 +88,7 @@ try:
         caffeine_amount_translated = caffeine_amount_translated.replace("毫升", "ml")
         # add caffeine amount to corresponding coffee pod
         coffee_dict[coffee].append(caffeine_amount_translated)
-        print(coffee_dict)
+        # print(coffee_dict)
         # post data to notion database
         data = {
             "Coffee Name": {"title": [{"text": {"content": coffee_dict[coffee][0]}}]},
@@ -97,7 +97,7 @@ try:
                 "rich_text": [{"text": {"content": coffee_dict[coffee][2]}}]
             },
         }
-        if not existed(coffee):
+        if get_page(coffee) == "Not Found":
             create_page(data)
 
 except ConnectionRefusedError:
