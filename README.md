@@ -1,14 +1,14 @@
-# About The Project
+## About The Project
 
-# Getting Started
+## Getting Started
 
-## Prerequisites
+### Prerequisites
 
 Python installed on your machine
 Chrome browser installed
 Chromedriver executable in the project directory (replace "chromedriver.exe" with the appropriate version for your operating system)
 
-## Installation
+### Installation
 
 Clone the repository:
 
