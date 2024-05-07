@@ -1,5 +1,7 @@
 ## About The Project
 
+This project is designed for personal use, allowing you to easily track the caffeine intake and approximate monthly spending on Nespresso original coffee pods. It utilizes web scraping techniques to gather data from Nespresso websites, providing you with comprehensive information to manage your coffee consumption and budget.
+
 ## Getting Started
 
 ### Prerequisites
